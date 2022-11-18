@@ -3,7 +3,6 @@ import * as helper from "./helper"
 import { apiUrls } from "./helper"
 import { IConvertPosition, IMarketDataHistory, IModifyOrder, IOrder } from "./types"
 const apiUrl = "https://api.fyers.in/api/v2/"
-const dataApiUrl = "https://api.fyers.in/data-rest/v2/"
 
 const getAuthToken = (appId: string, token: string) => `${appId}:${token}`
 
@@ -163,21 +162,28 @@ class fyers {
     }
     async convertPosition(token: string, data: IConvertPosition) {
         try {
-            return await request(apiUrls.convertPosition, "POST", data, getAuthToken(this.appId, token))
+            return await request(apiUrls.convertPosition, "PUT", data, getAuthToken(this.appId, token))
         } catch (error: any) {
             return error
         }
     }
     async getMarketDataHistory(token: string, data: IMarketDataHistory) {
         try {
-            return await request(apiUrls.marketDataHistory({ ...data }), "POST", data, getAuthToken(this.appId, token))
+            return await request(apiUrls.marketDataHistory({ ...data }), "GET", data, getAuthToken(this.appId, token))
         } catch (error: any) {
             return error
         }
     }
     async getQuotes(token: string, symbol: string) {
         try {
-            return await request(apiUrls.quotes(symbol), "POST", {}, getAuthToken(this.appId, token))
+            return await request(apiUrls.quotes(symbol), "GET", {}, getAuthToken(this.appId, token))
+        } catch (error: any) {
+            return error
+        }
+    }
+    async getDepth(token: string, symbol: string) {
+        try {
+            return await request(apiUrls.depth(symbol), "GET", {}, getAuthToken(this.appId, token))
         } catch (error: any) {
             return error
         }

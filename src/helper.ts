@@ -554,6 +554,7 @@ const apiUrls = {
     marketDataHistory: ({ symbol: string, resolution: string, dateFormat: number, from: string, to: string, flagCount: number }) =>
         `${dataApi}history/?symbol=${symbol}&resolution=${resolution}&date_format=${format}&range_from=${from}&range_to=${to}&cont_flag=${flag}`,
     quotes: (symbol: string) => `${dataApi}quotes/?symbols=${symbol}`,
+    depth: (symbol: string) => `${dataApi}depth/?symbol=${symbol}`,
 }
 
 export { marketDataUpdateHelper, orderUpdateHelper, sha256, apiUrls }
