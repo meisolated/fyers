@@ -7,7 +7,7 @@ interface IOrder {
     productType: string // CNC: For equity only INTRADAY: Applicable for all segmentsMARGIN: Applicable only for derivativesCO: Cover order,BO: Bracket order
     limitPrice: number //default 0Provide valid price for Limit and Stoplimit orders
     stopPrice: number //default 0Provide valid price for Stop and Stoplimit orders
-    disclosedQty: number// default 0 allowed only for Equity orders
+    disclosedQty: number // default 0 allowed only for Equity orders
     validity: string //DAY: Valid for the dayIOC: Immediate or cancel
     offlineOrder: string //False: When market is open True: When placing AMO order
     stopLoss: number //default 0Provide valid price for CO and BO orders

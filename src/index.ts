@@ -31,7 +31,6 @@ const request = async (url: string, method: string, data: any, authorization: st
     return response.data
 }
 
-
 class fyers {
     appId: string
     secretId: string
@@ -70,8 +69,7 @@ class fyers {
     async getFunds(token: string) {
         try {
             return await request(apiUrls.funds, "GET", {}, getAuthToken(this.appId, token))
-        }
-        catch (error: any) {
+        } catch (error: any) {
             return error
         }
     }
@@ -85,123 +83,105 @@ class fyers {
     async getOrders(token: string) {
         try {
             return await request(apiUrls.orders, "GET", {}, getAuthToken(this.appId, token))
-        }
-        catch (error: any) {
+        } catch (error: any) {
             return error
         }
     }
     async getPositions(token: string) {
         try {
             return await request(apiUrls.positions, "GET", {}, getAuthToken(this.appId, token))
-        }
-        catch (error: any) {
+        } catch (error: any) {
             return error
         }
     }
     async getTrades(token: string) {
         try {
             return await request(apiUrls.tradeBook, "GET", {}, getAuthToken(this.appId, token))
-        }
-        catch (error: any) {
+        } catch (error: any) {
             return error
         }
-
     }
     async getFilteredOrders(token: string, orderId: number) {
         try {
             return await request(apiUrls.filterOrder(orderId), "GET", {}, getAuthToken(this.appId, token))
-        }
-        catch (error: any) {
+        } catch (error: any) {
             return error
         }
-
     }
     async getMarketStatus(token: string) {
         try {
             return await request(apiUrls.marketStatus, "GET", {}, getAuthToken(this.appId, token))
-        }
-        catch (error: any) {
+        } catch (error: any) {
             return error
         }
     }
     async placeOrder(token: string, data: IOrder) {
         try {
             return await request(apiUrls.placeOrder, "POST", data, getAuthToken(this.appId, token))
-        }
-        catch (error: any) {
+        } catch (error: any) {
             return error
         }
     }
     async multiOrder(token: string, data: IOrder[]) {
         try {
             return await request(apiUrls.placeMultiOrder, "POST", data, getAuthToken(this.appId, token))
-        }
-        catch (error: any) {
+        } catch (error: any) {
             return error
         }
     }
     async modifyOrder(token: string, data: IModifyOrder) {
         try {
             return await request(apiUrls.modifyOrder, "POST", data, getAuthToken(this.appId, token))
-        }
-        catch (error: any) {
+        } catch (error: any) {
             return error
         }
     }
     async modifyMultiOrder(token: string, data: IModifyOrder[]) {
         try {
             return await request(apiUrls.modifyOrder, "POST", data, getAuthToken(this.appId, token))
-        }
-        catch (error: any) {
+        } catch (error: any) {
             return error
         }
     }
     async cancelOrder(token: string, orderId: number) {
         try {
             return await request(apiUrls.cancelOrder, "DELETE", { id: orderId }, getAuthToken(this.appId, token))
-        }
-        catch (error: any) {
+        } catch (error: any) {
             return error
         }
     }
     async cancelMultiOrder(token: string, orderId: Array<{ id: Number }>) {
         try {
             return await request(apiUrls.cancelOrder, "DELETE", { id: orderId }, getAuthToken(this.appId, token))
-        }
-        catch (error: any) {
+        } catch (error: any) {
             return error
         }
     }
     async exitPosition(token: string, orderId: string) {
         try {
             return await request(apiUrls.exitPosition, "DELETE", { id: orderId }, getAuthToken(this.appId, token))
-        }
-        catch (error: any) {
+        } catch (error: any) {
             return error
         }
     }
     async exitAllPosition(token: string) {
         try {
             return await request(apiUrls.exitPosition, "DELETE", {}, getAuthToken(this.appId, token))
-        }
-        catch (error: any) {
+        } catch (error: any) {
             return error
         }
     }
     async convertPosition(token: string, data: IConvertPosition) {
         try {
             return await request(apiUrls.convertPosition, "POST", data, getAuthToken(this.appId, token))
-        }
-        catch (error: any) {
+        } catch (error: any) {
             return error
         }
-
     }
     async getMarketDataHistory(token: string, data: IMarketDataHistory) {
         try {
             return await request(apiUrls.marketDataHistory({ ...data }), "POST", data, getAuthToken(this.appId, token))
-        }
-        catch (error: any) {
+        } catch (error: any) {
             return error
         }
     }
