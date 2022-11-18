@@ -183,3 +183,4 @@ class fyers {
         }
     }
 }
+export default fyers
