@@ -1,6 +1,5 @@
 //@ts-nocheck
 import WebSocket from "ws"
-import logger from "../logger"
 const apiUrl = "https://api.fyers.in/api/v2/"
 const dataApi = "https://api.fyers.in/data-rest/v2/"
 const WS_URL = (token: string, update: string) => `wss://api.fyers.in/socket/v2/dataSock?access_token=${token}&user-agent=fyers-api&type=${update}`
@@ -8,6 +7,45 @@ var _globalFyersDict: any = {}
 
 const generateAccessTokenUrl = (authToken: string, appId: string) => apiUrl + "genrateToken?authorization_code=" + authToken.authorization_code + "&app_id=" + appId
 // ------| Helper functions |------
+async function socketWrapper(url: string, data: string, callback: Function, user?: string) {
+    const pingFrequency = 6000
+    const maxReconnectTimes = 10
+    let isAlive = false
+    let reconnectCount = 0
+
+    const ws = new WebSocket(url)
+    ws.binaryType = "arraybuffer"
+    ws.on("open", () => {
+        ws.send(data)
+        ws.send(JSON.stringify("ping"))
+    })
+    ws.on("error", (e) => {
+        console.log(e)
+    })
+    ws.on("closed", (e) => {
+        console.log(e)
+    })
+    ws.onmessage = (res) => {
+        if (typeof res.data === "string" && res.data.includes("pong")) {
+            isAlive = true
+            return
+        } else {
+            callback(res)
+        }
+    }
+    let interValInstant = setInterval(() => {
+        if (!isAlive) {
+            reconnectCount++
+            clearInterval(interValInstant)
+            if (reconnectCount <= maxReconnectTimes) {
+                socketWrapper(url, data, callback, user)
+            } else {
+                console.log("reconnect failed")
+            }
+        }
+    }, pingFrequency)
+    return ws
+}
 async function sha256(s: any) {
     var chrsz = 8
     var hexcase = 0
@@ -183,47 +221,6 @@ async function sha256(s: any) {
     }
     s = Utf8Encode(s)
     return binb2hex(core_sha256(str2binb(s), s.length * chrsz))
-}
-async function socketWrapper(url: string, data: string, callback: Function, user?: string) {
-    const pingFrequency = 6000
-    const maxReconnectTimes = 10
-    let isAlive = false
-    let reconnectCount = 0
-
-    const ws = new WebSocket(url)
-    ws.binaryType = "arraybuffer"
-    ws.on("open", () => {
-        logger.info("a socket connection is established", user ? true : false, user ? user : "null")
-        ws.send(data)
-        ws.send(JSON.stringify("ping"))
-    })
-    ws.on("error", (e) => {
-        logger.error(e.message, user ? true : false, user ? user : "null")
-    })
-    ws.on("closed", (e) => {
-        logger.error(e.message, user ? true : false, user ? user : "null")
-    })
-    ws.onmessage = (res) => {
-        if (typeof res.data === "string" && res.data.includes("pong")) {
-            isAlive = true
-            return
-        } else {
-            callback(res)
-        }
-    }
-    let interValInstant = setInterval(() => {
-        if (!isAlive) {
-            logger.info("trying to reconnect", user ? true : false, user ? user : "null")
-            reconnectCount++
-            clearInterval(interValInstant)
-            if (reconnectCount <= maxReconnectTimes) {
-                socketWrapper(url, data, callback, user)
-            } else {
-                logger.error("Error : Connection Error unable to connect to socket", user ? true : false, user ? user : "null")
-            }
-        }
-    }, pingFrequency)
-    return ws
 }
 async function unPackUDP(resp: any) {
     var FY_P_VAL_KEY = "v"
