@@ -175,4 +175,11 @@ class fyers {
             return error
         }
     }
+    async getQuotes(token: string, symbol: string) {
+        try {
+            return await request(apiUrls.quotes(symbol), "POST", {}, getAuthToken(this.appId, token))
+        } catch (error: any) {
+            return error
+        }
+    }
 }
