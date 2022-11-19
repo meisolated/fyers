@@ -501,6 +501,11 @@ class marketDataUpdateHelper {
             callback(unpackedData)
         })
     }
+    async updateSymbolList(symbol: Array<string>) {
+        this.data.TLIST = symbol
+        const dataString = JSON.stringify(this.data)
+        this.Instance.send(dataString)
+    }
     async unsubscribe() {
         if (this.Instance) {
             this.data.SUB_T = 0
@@ -512,7 +517,7 @@ class marketDataUpdateHelper {
         }
     }
 }
-class orderUpdateHelper {
+class orderUpdateHelper extends marketDataUpdateHelper {
     private Instance: any
     private data = { T: "SUB_ORD", SLIST: ["orderUpdate"], SUB_T: 1 }
 

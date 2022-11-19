@@ -36,4 +36,67 @@ interface IMarketDataHistory {
     flagCount: number
 }
 
-export { IOrder, IModifyOrder, IConvertPosition, IMarketDataHistory }
+interface IProfile {
+    name: string
+    email_id: string
+    display_name: string
+    image: string
+    PAN: string
+    fy_id: string
+    pwd_change_date: string
+    pwd_to_expire: string
+}
+interface IFunds {
+    id: number
+    title: string
+    equityAmount: number
+    commodityAmount: number
+}
+interface IHolding {
+    holdingType: string
+    quantity: number
+    costPrice: number
+    marketVal: number
+    remainingQuantity: number
+    pl: number
+    ltp: number
+    id: number
+    fyToken: number
+    exchange: number
+    symbol: string
+}
+
+interface OrderBook {
+
+    orderDateTime: string
+    id: number
+    exchOrdId: number,
+    side: number,
+    segment: number,
+    instrument: string,
+    productType: string,
+    status: number,
+    qty: number,
+    remainingQuantity: number,
+    filledQty: number,
+    limitPrice: number,
+    stopPrice: number,
+    type: number,
+    discloseQty: number,
+    dqQtyRem: number,
+    orderValidity: string,
+    source: string,
+    slNo: number,
+    fyToken: number,
+    offlineOrder: Boolean,
+    message: string
+    parentId?: string
+    orderNumStatus: string,
+    tradedPrice: number,
+    exchange: number,
+    pan: string,
+    clientId: string,
+    symbol: string,
+
+}
+export { IOrder, IModifyOrder, IConvertPosition, IMarketDataHistory, IProfile, IFunds, IHolding, OrderBook }

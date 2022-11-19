@@ -1,7 +1,7 @@
 import axios from "axios"
 import * as helper from "./helper"
 import { apiUrls } from "./helper"
-import { IConvertPosition, IMarketDataHistory, IModifyOrder, IOrder } from "./types"
+import { IConvertPosition, IMarketDataHistory, IModifyOrder, IOrder, IProfile } from "./types"
 const apiUrl = "https://api.fyers.in/api/v2/"
 
 const getAuthToken = (appId: string, token: string) => `${appId}:${token}`
@@ -20,21 +20,37 @@ const request = async (url: string, method: string, data: any, authorization: st
     return response.data
 }
 
-class fyers {
+class fyersUser extends helper.orderUpdateHelper {
     appId: string
     secretId: string
     redirectUrl: string
     constructor(appId: string, secretId: string, redirectUrl: string) {
+        super()
         this.appId = appId
         this.secretId = secretId
         this.redirectUrl = redirectUrl
     }
+    /**
+     * @description this will return login url
+     * 
+     * @returns  login url
+     * 
+     * @memberOf fyersUser
+     */
     async generateLoginUrl() {
         const client_id = this.appId
         const redirect_uri = this.redirectUrl
         const state = "sample_state"
         return `${apiUrl}generate-authcode?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=code&state=${state}`
     }
+    /**
+     * @description this will return user access token
+     * 
+     * @param {*} authCode auth code generated from generateLoginUrl
+     * @returns this will return access token
+     * 
+     * @memberOf fyersUser
+     */
     async generateAccessToken(authCode: any) {
         const sha256 = await helper.sha256(`${this.appId}:${this.secretId}`)
         try {
@@ -48,6 +64,14 @@ class fyers {
             return error
         }
     }
+    /**
+     * @description this will return user profile data
+     * 
+     * @param {string} token user token
+     * @returns you will find data object inside returned object, in which data is structured something like this {name,image,display_name,email_id,PAN,fy_id,pwd_change_date,pwd_to_expire}
+     * 
+     * @memberOf fyersUser
+     */
     async getProfile(token: string) {
         try {
             return await request(apiUrls.profile, "GET", {}, getAuthToken(this.appId, token))
@@ -55,6 +79,14 @@ class fyers {
             return error
         }
     }
+    /**
+     * @description this will return user funds data
+     * 
+     * @param {string} token user token
+     * @returns  this will return funds data
+     * 
+     * @memberOf fyersUser
+     */
     async getFunds(token: string) {
         try {
             return await request(apiUrls.funds, "GET", {}, getAuthToken(this.appId, token))
@@ -189,4 +221,6 @@ class fyers {
         }
     }
 }
-export default fyers
+export default fyersUser
+export { IConvertPosition, IModifyOrder, IOrder, IMarketDataHistory, IProfile }
+
